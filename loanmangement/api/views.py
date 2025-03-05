@@ -118,8 +118,20 @@ class LoanListCreate(APIView):
                     return Response({"error": "Authentication failed. Token required."}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-                amount= float(data['amount'])
-                tenure = int(data['tenure'])
+                try:
+                    amount = float(data['amount'])
+                    if amount < 1000 or amount > 100000:
+                        return Response({"error": "Amount must be between ₹1,000 and ₹100,000."}, status=status.HTTP_400_BAD_REQUEST)
+                except ValueError:
+                    return Response({"error": "Amount must be a number."}, status=status.HTTP_400_BAD_REQUEST)
+                
+                try:
+                    tenure = int(data['tenure'])
+                    if tenure < 3 or tenure > 24:
+                        return Response({"error": "Tenure must be between 3 and 24 months."}, status=status.HTTP_400_BAD_REQUEST)
+                except ValueError:
+                    return Response({"error": "Tenure must be a whole number."}, status=status.HTTP_400_BAD_REQUEST)
+                
                 interest_rate = float(data['interest_rate'])
                 # Generate user id
                 loan_id = f"LOAN{str(int(datetime.now().timestamp()))[-4:]}" 
