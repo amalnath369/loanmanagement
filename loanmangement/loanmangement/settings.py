@@ -28,7 +28,7 @@ DEBUG = os.getenv('DEBUG')
 
 
 
-ALLOWED_HOSTS = ['https://loanmanagement-3.onrender.com']
+ALLOWED_HOSTS = ['loanmanagement-3.onrender.com']
 
 
 # Application definition
