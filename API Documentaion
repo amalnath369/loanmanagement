@@ -1,0 +1,232 @@
+# Loan Management System API Documentation
+
+## 📌 Overview
+This API is designed to manage loan applications, user authentication, and loan transactions with role-based access. It includes features such as user registration, OTP verification, loan creation, EMI calculations, and loan foreclosure.
+
+### 🌐 **Live API Base URL**
+```
+https://loanmanagement-3.onrender.com/api/
+```
+
+## 📌 API Endpoints
+### **Authentication APIs**
+#### 1️⃣ User Registration
+- **Endpoint:** `POST /register/`
+- **Request Body:**
+  ```json
+  {
+    "username": "testuser",
+    "email": "test@example.com",
+    "password": "securepassword",
+    "role": "user"
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "status": "success",
+    "message": "OTP sent to your email"
+  }
+  ```
+
+#### 2️⃣ OTP Verification
+- **Endpoint:** `POST /verifyotp/`
+- **Request Body:**
+  ```json
+  {
+    "email": "test@example.com",
+    "otp": "123456"
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "status": "success",
+    "message": "OTP verified, User Registered successfully"
+  }
+  ```
+
+#### 3️⃣ User Login (JWT Authentication)
+- **Endpoint:** `POST /login/`
+- **Request Body:**
+  ```json
+  {
+    "email": "test@example.com",
+    "password": "securepassword"
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "access": "your_access_token",
+    "refresh": "your_refresh_token"
+  }
+  ```
+
+#### 4️⃣ Refresh Token
+- **Endpoint:** `POST /token/refresh/`
+- **Request Body:**
+  ```json
+  {
+    "refresh": "your_refresh_token"
+  }
+  ```
+
+## 📌 Loan Management APIs
+#### 5️⃣ Create Loan
+- **Endpoint:** `POST /loans/`
+- **Headers:**
+  ```json
+  {
+    "Authorization": "Bearer <your_access_token>",
+    "Content-Type": "application/json"
+  }
+  ```
+- **Request Body:**
+  ```json
+  {
+    "amount": 10000,
+    "tenure": 12,
+    "interest_rate": 10
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "status": "success",
+    "data": {
+      "loan_id": "LOAN1234",
+      "monthly_installment": 879.16,
+      "total_interest": 1549.92,
+      "total_amount": 11549.92
+    }
+  }
+  ```
+
+#### 6️⃣ List Loans
+- **Endpoint:** `GET /loans/`
+- **Headers:**
+  ```json
+  {
+    "Authorization": "Bearer <your_access_token>"
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "loans": [
+      {
+        "loan_id": "LOAN1234",
+        "amount": 10000,
+        "status": "ACTIVE"
+      }
+    ]
+  }
+  ```
+
+#### 7️⃣ Loan Details
+- **Endpoint:** `GET /loans/{loan_id}/`
+- **Response:**
+  ```json
+  {
+    "loan_id": "LOAN1234",
+    "amount": 10000,
+    "status": "ACTIVE"
+  }
+  ```
+
+#### 8️⃣ Delete Loan (Admin Only)
+- **Endpoint:** `DELETE /loans/{loan_id}/`
+- **Response:**
+  ```json
+  {
+    "status": "success",
+    "message": "Loan Deleted Successfully"
+  }
+  ```
+
+#### 9️⃣ Loan Foreclosure
+- **Endpoint:** `POST /loans/foreclose/`
+- **Request Body:**
+  ```json
+  {
+    "loan_id": "LOAN1234"
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "status": "success",
+    "message": "Loan foreclosed successfully"
+  }
+  ```
+
+## 📌 Setup Guide
+### **Prerequisites**
+- Python 3.8+
+- Django & Django REST Framework
+- PostgreSQL Database
+
+### **Installation Steps**
+1. **Clone the Repository:**
+   ```sh
+   git clone https://github.com/yourusername/loan-management-api.git
+   cd loan-management-api
+   ```
+2. **Create a Virtual Environment:**
+   ```sh
+   python -m venv venv
+   source venv/bin/activate  # Mac/Linux
+   venv\Scripts\activate  # Windows
+   ```
+3. **Install Dependencies:**
+   ```sh
+   pip install -r requirements.txt
+   ```
+4. **Run Migrations:**
+   ```sh
+   python manage.py migrate
+   ```
+5. **Start the Server:**
+   ```sh
+   python manage.py runserver
+   ```
+6. **Access API at:**
+   ```
+   http://127.0.0.1:8000/api/
+   ```
+
+## 📌 Testing Instructions
+### **Using Postman**
+1. Open Postman.
+2. Click **Import** → Upload `postman_collection.json`.
+3. Update `{{base_url}}` with `https://loanmanagement-3.onrender.com/api/`.
+4. Add your **JWT Token** to requests that need authentication.
+5. Click **Send** to test API responses.
+
+### **Using cURL** (Example Request)
+```sh
+curl -X POST https://loanmanagement-3.onrender.com/api/register/ \
+-H "Content-Type: application/json" \
+-d '{"username": "testuser", "email": "test@example.com", "password": "securepassword", "role": "user"}'
+```
+
+### **Using Python Requests**
+```python
+import requests
+
+url = "https://loanmanagement-3.onrender.com/api/register/"
+data = {
+    "username": "testuser",
+    "email": "test@example.com",
+    "password": "securepassword",
+    "role": "user"
+}
+
+response = requests.post(url, json=data)
+print(response.json())
+```
+
+
+
+🚀 **You are now ready to use the Loan Management System API!**
